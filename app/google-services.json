@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "174338636107",
+    "firebase_url": "https://recipemaniaapp.firebaseio.com",
+    "project_id": "recipemaniaapp",
+    "storage_bucket": "recipemaniaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174338636107:android:01fba2fde4e787525010ce",
+        "android_client_info": {
+          "package_name": "com.example.recipemaniaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174338636107-tf6k3vr20d63a8vmdjfa7hjihvf21fea.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.recipemaniaapp",
+            "certificate_hash": "e0177a7e705c2d2a6faa95d8ef3205c2e17a28ad"
+          }
+        },
+        {
+          "client_id": "174338636107-fkckr1pa3qb8an4id9j87fhha4nuso6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8wmZ9s-2J08Nasox923IPxHzUXuaHCYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174338636107-fkckr1pa3qb8an4id9j87fhha4nuso6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
