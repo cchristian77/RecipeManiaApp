@@ -9,7 +9,6 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.example.recipemaniaapp.R
-import kotlinx.android.synthetic.main.fragment_photo.*
 
 class AddFormFragment : Fragment(), View.OnClickListener{
 
@@ -71,14 +70,17 @@ class AddFormFragment : Fragment(), View.OnClickListener{
     }
 
     override fun onClick(v: View) {
+        val mBundle = Bundle()
+        val fm = activity!!.supportFragmentManager
+        val mNewRecipeFragment = NewRecipeFragment()
         if(v.id == R.id.save_btn) {
             val checker = edtInput.text.toString().trim()
             if(checker.isEmpty()) {
                 edtInput.error = "The input cannot be empty"
                 return
             } else {
-                val mBundle = Bundle()
-                val mNewRecipeFragment = NewRecipeFragment()
+
+
                 if(tvTitle.text == "Add Information") {
                     mBundle.putString(NewRecipeFragment.EXTRA_INFO, edtInput.text.toString())
                     mBundle.putString(NewRecipeFragment.EXTRA_INGREDIENT, arguments?.getString(EXTRA_INGREDIENT))
@@ -96,9 +98,9 @@ class AddFormFragment : Fragment(), View.OnClickListener{
 
                 mBundle.putString(NewRecipeFragment.EXTRA_CATEGORY, arguments?.getString(EXTRA_CATEGORY))
                 mBundle.putString(NewRecipeFragment.EXTRA_NAME, arguments?.getString(EXTRA_NAME))
-                val fm = activity!!.supportFragmentManager
+
                 fm
-                    .beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .replace(
                         R.id.frame_container,
                         mNewRecipeFragment,
@@ -113,23 +115,43 @@ class AddFormFragment : Fragment(), View.OnClickListener{
             }
 
         }
+        mBundle.putString(NewRecipeFragment.EXTRA_INFO, arguments?.getString(EXTRA_INFO))
+        mBundle.putString(NewRecipeFragment.EXTRA_INGREDIENT, arguments?.getString(EXTRA_INGREDIENT))
+        mBundle.putString(NewRecipeFragment.EXTRA_INGREDIENT, arguments?.getString(EXTRA_INGREDIENT))
+        mBundle.putString(NewRecipeFragment.EXTRA_CATEGORY, arguments?.getString(EXTRA_CATEGORY))
+        mBundle.putString(NewRecipeFragment.EXTRA_NAME, arguments?.getString(EXTRA_NAME))
         val fragmentManager = activity!!.supportFragmentManager
         fragmentManager.popBackStack("Form", 1)
+        fm
+            .beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            .replace(
+                R.id.frame_container,
+                mNewRecipeFragment,
+                NewRecipeFragment::class.java.simpleName
+            )
+            .addToBackStack("Form")
+            .commit()
+
+        mNewRecipeFragment.arguments = mBundle
 //        fragmentManager.popBackStack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-
-                val fragmentManager = activity!!.supportFragmentManager
-                if(fragmentManager.backStackEntryCount > 0)
-                    fragmentManager.popBackStack("Form", 1)
-
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+//        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//
+//                val fragmentManager = activity!!.supportFragmentManager
+//
+//                if(fragmentManager.backStackEntryCount  > 0)
+//                    fragmentManager.popBackStack("Form", 1)
+//
+//
+//                }
+//
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
    private fun checker() {

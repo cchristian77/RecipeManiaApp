@@ -18,12 +18,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 
 class NavigationBar : AppCompatActivity() {
-
-    lateinit var signedAccount: GoogleSignInAccount
+//
+//    lateinit var signedAccount: GoogleSignInAccount
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        signedAccount = intent.getParcelableExtra("Google_Account")
-        Log.d("Msg", signedAccount.email)
+//        signedAccount = intent.getParcelableExtra("Google_Account")
+//        Log.d("Msg", signedAccount.email)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation_bar)
 
@@ -41,9 +41,6 @@ class NavigationBar : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        var mFragmentManager = supportFragmentManager
-        val fragment = mFragmentManager.findFragmentByTag(NewRecipeFragment::class.java.simpleName)
 
     }
 

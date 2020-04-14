@@ -1,6 +1,9 @@
 package com.example.recipemaniaapp.ui.newrecipe
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,14 +11,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
 import com.example.recipemaniaapp.R
+import com.example.recipemaniaapp.model.Recipe
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.Task
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_new_recipe.*
+import kotlinx.android.synthetic.main.fragment_photo_form.*
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 /**
  * A simple [Fragment] subclass.
  */
 class NewRecipeFragment : Fragment(), View.OnClickListener {
+
+    lateinit var storageReference: StorageReference
 
     companion object {
 
@@ -24,6 +43,7 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         val EXTRA_INGREDIENT = "extra_ingredient"
         val EXTRA_STEP = "extra_step"
         val EXTRA_CATEGORY = "extra_category"
+        private val PICK_IMAGE_CODE = 1000
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -55,17 +75,39 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         if (v.id== R.id.add_information_btn || v.id == R.id.add_photos_btn || v.id == R.id.add_ingredient_btn
             || v.id == R.id.add_ingredient_btn || v.id == R.id.add_steps_btn
         ) {
-            val mAddFormFragment = AddFormFragment()
-
+            val fm = activity!!.supportFragmentManager
             val mBundle = Bundle()
             when (v.id) {
                 R.id.add_photos_btn -> {
-                    mBundle.putString(AddFormFragment.EXTRA_TITLE, "Add Information")
-                    mBundle.putString(
-                        AddFormFragment.EXTRA_FORM_DESC,
-                        "Add a photo to your recipe. Recipe's photo makes your food look more interesting and appealing."
-                    )
-                    mBundle.putString(AddFormFragment.EXTRA_BUTTON, "Save Photo")
+
+
+                    val intent = Intent()
+                    intent.type = "image/*"
+                    intent.action = Intent.ACTION_GET_CONTENT
+                    startActivityForResult(
+                        Intent.createChooser(intent, "Select Picture"),
+                        NewRecipeFragment.PICK_IMAGE_CODE)
+                    return
+                    //                    mBundle.putString(AddFormFragment.EXTRA_TITLE, "Add Photo")
+//                    mBundle.putString(
+//                        AddFormFragment.EXTRA_FORM_DESC,
+//                        "Add a photo to your recipe. Recipe's photo makes your food look more interesting and appealing."
+//                    mBundle.putString(AddFormFragment.EXTRA_BUTTON, "Save Photo")
+//                    val mPhotoFragment = PhotoFormFragment()
+//                    fm
+//                        .beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+//                        .replace(
+//                            R.id.frame_container,
+//                            mPhotoFragment,
+//                            PhotoFormFragment::class.java.simpleName
+//                        )
+//                        .addToBackStack(null)
+//                        .addToBackStack("Form")
+//                        .commit()
+//
+//                    mPhotoFragment.arguments = mBundle
+//                    return
+
                 }
 
                 R.id.add_information_btn -> {
@@ -110,7 +152,7 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             mBundle.putString(AddFormFragment.EXTRA_STEP, arguments?.getString(EXTRA_STEP))
             mBundle.putString(AddFormFragment.EXTRA_CATEGORY, category_spinner.selectedItemId.toString())
 
-            val fm = activity!!.supportFragmentManager
+            val mAddFormFragment = AddFormFragment()
             fm
                 .beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(
@@ -118,7 +160,6 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
                     mAddFormFragment,
                     AddFormFragment::class.java.simpleName
                 )
-//                .addToBackStack(null)
                 .addToBackStack("Form")
                 .commit()
 
@@ -126,7 +167,20 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         } else if (v.id== R.id.add_new_recipe_btn) {
             val valid = validator()
             if(valid) {
-                Toast.makeText(activity,"Save to Database.", Toast.LENGTH_SHORT).show()
+                val databaseRef = FirebaseDatabase.getInstance().getReference("Recipe")
+                val recipeName = edt_recipe_name.text.toString().capitalizeWords()
+                val user = GoogleSignIn.getLastSignedInAccount(activity)
+                val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time)
+                val recipe = Recipe(edt_recipe_name.text.toString(),  recipeName, arguments?.getString(EXTRA_INGREDIENT),
+                        arguments?.getString(EXTRA_STEP), category_spinner.selectedItem.toString(), user?.email.toString(), time)
+                val recipeID = databaseRef.push().key.toString()
+                databaseRef.child(recipeID).setValue(recipe).
+                    addOnCompleteListener {
+                        Toast.makeText(activity, "$recipeName recipe added successfully.",Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(activity, "$recipeName saved failed.",Toast.LENGTH_SHORT).show()
+                    }
             }
         }
     }
@@ -187,6 +241,42 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
         return valid
 
+    }
+
+    fun String.capitalizeWords(): String = split(" ").map { it.capitalize() }.joinToString(" ").trim()
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == NewRecipeFragment.PICK_IMAGE_CODE) {
+            if(data == null || data.data == null) return
+
+            val filePath = data.data
+
+            if(filePath != null) {
+                storageReference = FirebaseStorage.getInstance().reference
+                val ref = storageReference.child("recipe_image/" + UUID.randomUUID().toString())
+                val uploadTask = ref?.putFile(filePath!!)
+
+                val urlTask = uploadTask?.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            Toast.makeText(activity,"Failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    return@Continuation ref.downloadUrl
+                })?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val downloadUri = task.result
+                        val url = downloadUri!!.toString()
+                        Log.d("DIRECT LINK", url)
+                        Picasso.get().load(data.data).into(image_preview)
+                    }
+                }
+            }else{
+                Toast.makeText(activity, "Please Upload an Image", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 }

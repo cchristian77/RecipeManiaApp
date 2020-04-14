@@ -22,10 +22,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//
-//        supportActionBar?.title = "Home"
-//        tv_user = findViewById(R.id.tv_user);
-//        tv_user.setText(signedAccount.email)
 
     }
+
 }

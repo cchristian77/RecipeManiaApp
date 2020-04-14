@@ -14,7 +14,6 @@
         <activity
             android:name=".NavigationBar"
             android:label="@string/title_activity_navigation_bar"></activity>
-        <activity android:name=".HomeActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

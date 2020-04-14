@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     firebaseAuthWithGoogle(account)
                 }
             } catch (e: ApiException) {
-                Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Google sign in failed. Please try again.", Toast.LENGTH_LONG).show()
             }
         }
     }
