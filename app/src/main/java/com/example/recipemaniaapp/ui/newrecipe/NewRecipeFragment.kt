@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
 import com.example.recipemaniaapp.R
 import com.example.recipemaniaapp.model.Recipe
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -35,6 +35,8 @@ import java.util.*
 class NewRecipeFragment : Fragment(), View.OnClickListener {
 
     lateinit var storageReference: StorageReference
+    lateinit var dataPhoto : Uri
+    lateinit var urlPhoto : String
 
     companion object {
 
@@ -43,7 +45,9 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         val EXTRA_INGREDIENT = "extra_ingredient"
         val EXTRA_STEP = "extra_step"
         val EXTRA_CATEGORY = "extra_category"
+        val EXTRA_PHOTO  = "extra_photo"
         private val PICK_IMAGE_CODE = 1000
+
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -152,6 +156,13 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             mBundle.putString(AddFormFragment.EXTRA_STEP, arguments?.getString(EXTRA_STEP))
             mBundle.putString(AddFormFragment.EXTRA_CATEGORY, category_spinner.selectedItemId.toString())
 
+            if(this::dataPhoto.isInitialized) {
+                mBundle.putString(AddFormFragment.EXTRA_PHOTO, dataPhoto.toString())
+            } else {
+                mBundle.putString(AddFormFragment.EXTRA_PHOTO, arguments?.getString(EXTRA_PHOTO))
+            }
+
+
             val mAddFormFragment = AddFormFragment()
             fm
                 .beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -167,12 +178,14 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         } else if (v.id== R.id.add_new_recipe_btn) {
             val valid = validator()
             if(valid) {
+
                 val databaseRef = FirebaseDatabase.getInstance().getReference("Recipe")
                 val recipeName = edt_recipe_name.text.toString().capitalizeWords()
                 val user = GoogleSignIn.getLastSignedInAccount(activity)
                 val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time)
                 val recipe = Recipe(edt_recipe_name.text.toString(),  recipeName, arguments?.getString(EXTRA_INGREDIENT),
-                        arguments?.getString(EXTRA_STEP), category_spinner.selectedItem.toString(), user?.email.toString(), time)
+                        arguments?.getString(EXTRA_STEP), category_spinner.selectedItem.toString(), user?.email.toString(),
+                        urlPhoto, time)
                 val recipeID = databaseRef.push().key.toString()
                 databaseRef.child(recipeID).setValue(recipe).
                     addOnCompleteListener {
@@ -191,6 +204,7 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         val strIngredient = arguments?.getString(EXTRA_INGREDIENT)
         val strStep = arguments?.getString(EXTRA_STEP)
         val strCategory = arguments?.getString(EXTRA_CATEGORY)
+        val strPhoto = arguments?.getString(EXTRA_PHOTO)
 
         if(strInfo != null) {
             tv_information.setText("Information (Saved)")
@@ -210,7 +224,15 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             category_spinner.setSelection(category)
         }
 
+        if(strPhoto != null) {
+            tv_preview.setText("Preview")
+            add_photos_btn.setText("Change Photo")
+            Glide.with(this).load(strPhoto).into(image_preview)
+        }
+
         if(strName != null) edt_recipe_name.setText(strName)
+
+        Log.d("Photo", strPhoto.toString())
 
     }
 
@@ -220,7 +242,8 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         val strInfo = arguments?.getString(EXTRA_INFO)
         val strIngredient = arguments?.getString(EXTRA_INGREDIENT)
         val strStep = arguments?.getString(EXTRA_STEP)
-        val strCategory = arguments?.getString(EXTRA_CATEGORY)
+        val strPhoto = arguments?.getString(EXTRA_PHOTO)
+        val category = category_spinner.selectedItemId.toInt()
 
         if(strInfo == null || strIngredient == null || strStep == null) {
             valid = false
@@ -231,8 +254,22 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
                 valid = false
             }
 
-            if(category_spinner.selectedItemId.toInt() == 0)
-                valid = false
+            if(category_spinner.selectedItemId.toInt() == 0) valid = false
+
+            if(!this::dataPhoto.isInitialized && valid == null) {
+                valid=false
+            } else {
+                if(this::dataPhoto.isInitialized) {
+                    uploadPhoto(dataPhoto)
+                } else {
+                    val strPhoto = arguments?.getString(EXTRA_PHOTO)
+                    if(strPhoto != null) {
+                        val uri = Uri.parse(strPhoto)
+                        uploadPhoto(uri)
+                    }
+
+                }
+            }
         }
 
         if(valid == false) {
@@ -251,32 +288,48 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         if(requestCode == NewRecipeFragment.PICK_IMAGE_CODE) {
             if(data == null || data.data == null) return
 
-            val filePath = data.data
+            val filePath = data!!.data
 
             if(filePath != null) {
-                storageReference = FirebaseStorage.getInstance().reference
-                val ref = storageReference.child("recipe_image/" + UUID.randomUUID().toString())
-                val uploadTask = ref?.putFile(filePath!!)
+                dataPhoto = filePath
+            }
 
-                val urlTask = uploadTask?.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
-                    if (!task.isSuccessful) {
-                        task.exception?.let {
-                            Toast.makeText(activity,"Failed", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    return@Continuation ref.downloadUrl
-                })?.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val downloadUri = task.result
-                        val url = downloadUri!!.toString()
-                        Log.d("DIRECT LINK", url)
-                        Picasso.get().load(data.data).into(image_preview)
-                    }
-                }
+            if(filePath != null) {
+                uploadPhoto(filePath)
+                tv_preview.setText("Preview")
+                add_photos_btn.setText("Change Photo")
+                Glide.with(this).load(filePath).into(image_preview)
             }else{
                 Toast.makeText(activity, "Please Upload an Image", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun uploadPhoto(photo:Uri) {
+        var url: String? = null
+        storageReference = FirebaseStorage.getInstance().reference
+        val ref = storageReference.child("recipe_image/" + UUID.randomUUID().toString())
+        val uploadTask = ref?.putFile(photo)
+
+        val urlTask = uploadTask?.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    Toast.makeText(activity,"Failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+            return@Continuation ref.downloadUrl
+        })?.addOnCompleteListener {
+                task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    urlPhoto = downloadUri!!.toString()
+                    val url = downloadUri!!.toString()
+                    Log.d("DIRECT LINK", url)
+
+                }
+
+        }
+
     }
 
 }

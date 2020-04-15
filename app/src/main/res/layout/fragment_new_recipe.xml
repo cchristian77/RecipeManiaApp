@@ -45,6 +45,7 @@
             tools:layout_marginLeft="3dp">
 
             <LinearLayout
+                android:id="@+id/layout_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -86,7 +87,9 @@
                     android:id="@+id/tv_preview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/preview" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="You haven't uploaded any image." />
 
                 <ImageView
                     android:id="@+id/image_preview"

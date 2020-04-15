@@ -29,6 +29,7 @@ class AddFormFragment : Fragment(), View.OnClickListener{
         val EXTRA_INGREDIENT = "extra_ingredient"
         val EXTRA_STEP = "extra_step"
         val EXTRA_CATEGORY = "extra_category"
+        val EXTRA_PHOTO = "extra_photo"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -98,6 +99,7 @@ class AddFormFragment : Fragment(), View.OnClickListener{
 
                 mBundle.putString(NewRecipeFragment.EXTRA_CATEGORY, arguments?.getString(EXTRA_CATEGORY))
                 mBundle.putString(NewRecipeFragment.EXTRA_NAME, arguments?.getString(EXTRA_NAME))
+                mBundle.putString(NewRecipeFragment.EXTRA_PHOTO, arguments?.getString(EXTRA_PHOTO))
 
                 fm
                     .beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
@@ -120,6 +122,7 @@ class AddFormFragment : Fragment(), View.OnClickListener{
         mBundle.putString(NewRecipeFragment.EXTRA_INGREDIENT, arguments?.getString(EXTRA_INGREDIENT))
         mBundle.putString(NewRecipeFragment.EXTRA_CATEGORY, arguments?.getString(EXTRA_CATEGORY))
         mBundle.putString(NewRecipeFragment.EXTRA_NAME, arguments?.getString(EXTRA_NAME))
+        mBundle.putString(NewRecipeFragment.EXTRA_PHOTO, arguments?.getString(EXTRA_PHOTO))
         val fragmentManager = activity!!.supportFragmentManager
         fragmentManager.popBackStack("Form", 1)
         fm

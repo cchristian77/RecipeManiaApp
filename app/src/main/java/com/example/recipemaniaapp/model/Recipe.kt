@@ -9,6 +9,7 @@ class Recipe {
     var category: String? = null
     var like: Int = 0
     var user: String? = null
+    var photo: String? = null
     var createdAt: String? = null
 
     constructor() {
@@ -16,13 +17,14 @@ class Recipe {
     }
 
     constructor(name: String?, information: String?, ingredient: String?,
-                steps:String?, category: String?, user:String?, createdAt: String?) {
+                steps:String?, category: String?, user:String?, photo:String?, createdAt: String?) {
         this.name = name
         this.information = information
         this.ingredient = ingredient
         this.steps = steps
         this.category = category
         this.user = user
+        this.photo = photo
         this.createdAt = createdAt
     }
 

@@ -6,7 +6,7 @@
     <string name="form_save_btn">Save Button</string>
     <string name="title_form">Title</string>
     <string name="new_recipe_name">Recipe Name</string>
-    <string name="add_photos_btn">Add Photos</string>
+    <string name="add_photos_btn">Add Photo</string>
     <string name="add_information_btn">Add Information</string>
     <string name="add_ingredients_btn">Add Ingredients</string>
     <string name="add_steps_btn">Add Steps</string>
