@@ -177,24 +177,6 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             mAddFormFragment.arguments = mBundle
         } else if (v.id== R.id.add_new_recipe_btn) {
             val valid = validator()
-            if(valid) {
-
-                val databaseRef = FirebaseDatabase.getInstance().getReference("Recipe")
-                val recipeName = edt_recipe_name.text.toString().capitalizeWords()
-                val user = GoogleSignIn.getLastSignedInAccount(activity)
-                val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time)
-                val recipe = Recipe(edt_recipe_name.text.toString(),  recipeName, arguments?.getString(EXTRA_INGREDIENT),
-                        arguments?.getString(EXTRA_STEP), category_spinner.selectedItem.toString(), user?.email.toString(),
-                        urlPhoto, time)
-                val recipeID = databaseRef.push().key.toString()
-                databaseRef.child(recipeID).setValue(recipe).
-                    addOnCompleteListener {
-                        Toast.makeText(activity, "$recipeName recipe added successfully.",Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(activity, "$recipeName saved failed.",Toast.LENGTH_SHORT).show()
-                    }
-            }
         }
     }
 
@@ -228,6 +210,8 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             tv_preview.setText("Preview")
             add_photos_btn.setText("Change Photo")
             Glide.with(this).load(strPhoto).into(image_preview)
+            val uri = Uri.parse(strPhoto)
+            dataPhoto = uri
         }
 
         if(strName != null) edt_recipe_name.setText(strName)
@@ -256,28 +240,13 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
             if(category_spinner.selectedItemId.toInt() == 0) valid = false
 
-            if(!this::dataPhoto.isInitialized && valid == null) {
-                valid=false
-            } else {
-                if(this::dataPhoto.isInitialized) {
-                    uploadPhoto(dataPhoto)
-                } else {
-                    val strPhoto = arguments?.getString(EXTRA_PHOTO)
-                    if(strPhoto != null) {
-                        val uri = Uri.parse(strPhoto)
-                        uploadPhoto(uri)
-                    }
-
-                }
+            if(!this::dataPhoto.isInitialized && valid == null) valid=false
             }
-        }
 
-        if(valid == false) {
-            Toast.makeText(activity,"Your Recipe is not complete.", Toast.LENGTH_SHORT).show()
-        }
+        if(valid == false) Toast.makeText(activity,"Your Recipe is not complete.", Toast.LENGTH_SHORT).show()
+        else uploadPhoto()
 
         return valid
-
     }
 
     fun String.capitalizeWords(): String = split(" ").map { it.capitalize() }.joinToString(" ").trim()
@@ -295,21 +264,20 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             }
 
             if(filePath != null) {
-                uploadPhoto(filePath)
                 tv_preview.setText("Preview")
                 add_photos_btn.setText("Change Photo")
-                Glide.with(this).load(filePath).into(image_preview)
+                Glide.with(this).load(dataPhoto).into(image_preview)
             }else{
                 Toast.makeText(activity, "Please Upload an Image", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun uploadPhoto(photo:Uri) {
+    private fun uploadPhoto() {
         var url: String? = null
         storageReference = FirebaseStorage.getInstance().reference
         val ref = storageReference.child("recipe_image/" + UUID.randomUUID().toString())
-        val uploadTask = ref?.putFile(photo)
+        val uploadTask = ref?.putFile(dataPhoto)
 
         val urlTask = uploadTask?.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
             if (!task.isSuccessful) {
@@ -322,14 +290,31 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
                 task ->
                 if (task.isSuccessful) {
                     val downloadUri = task.result
-                    urlPhoto = downloadUri!!.toString()
                     val url = downloadUri!!.toString()
+                    uploadToDatabase(url)
                     Log.d("DIRECT LINK", url)
-
                 }
 
         }
 
+    }
+
+    private fun uploadToDatabase(url: String) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("Recipe")
+        val recipeName = edt_recipe_name.text.toString().capitalizeWords()
+        val user = GoogleSignIn.getLastSignedInAccount(activity)
+        val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time)
+        val recipe = Recipe(edt_recipe_name.text.toString(),  recipeName, arguments?.getString(EXTRA_INGREDIENT),
+            arguments?.getString(EXTRA_STEP), category_spinner.selectedItem.toString(), user?.email.toString(),
+            url, time)
+        val recipeID = databaseRef.push().key.toString()
+        databaseRef.child(recipeID).setValue(recipe).
+            addOnCompleteListener {
+                Toast.makeText(activity, "$recipeName recipe added successfully.",Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(activity, "$recipeName saved failed.",Toast.LENGTH_SHORT).show()
+            }
     }
 
 }
