@@ -15,7 +15,7 @@
         android:id="@+id/navigation_search"
         android:name="com.example.recipemaniaapp.ui.search.SearchBarFragment"
         android:label="@string/title_search"
-        tools:layout="@layout/search_bar_fragment" />
+        tools:layout="@layout/fragment_search_bar" />
 
     <fragment
         android:id="@+id/navigation_add_new_recipe"

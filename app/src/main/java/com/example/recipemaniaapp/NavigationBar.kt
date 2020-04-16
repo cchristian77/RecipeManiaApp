@@ -14,12 +14,18 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.recipemaniaapp.ui.newrecipe.AddFormFragment
 import com.example.recipemaniaapp.ui.newrecipe.NewRecipeFragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 
 class NavigationBar : AppCompatActivity() {
 //
 //    lateinit var signedAccount: GoogleSignInAccount
+
+    lateinit var mGoogleSignInClient: GoogleSignInClient
+    lateinit var mGoogleSignInOptions: GoogleSignInOptions
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        signedAccount = intent.getParcelableExtra("Google_Account")
@@ -41,6 +47,12 @@ class NavigationBar : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        mGoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, mGoogleSignInOptions)
 
     }
 
@@ -68,6 +80,7 @@ class NavigationBar : AppCompatActivity() {
 
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
+        mGoogleSignInClient.signOut()
         val mainIntent = Intent(this, MainActivity::class.java)
         startActivity(mainIntent)
     }

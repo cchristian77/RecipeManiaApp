@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             if (it.isSuccessful) {
                 val signedAccount = GoogleSignIn.getLastSignedInAccount(this)
                 val navbarIntent = Intent(this@MainActivity, NavigationBar::class.java)
-                navbarIntent.putExtra("Google_Account", signedAccount);
+                navbarIntent.putExtra("Google Sign In Options", mGoogleSignInOptions)
                 startActivity(navbarIntent)
                 finish()
             } else {

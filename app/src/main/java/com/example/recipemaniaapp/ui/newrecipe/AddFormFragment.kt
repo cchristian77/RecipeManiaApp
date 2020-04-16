@@ -108,7 +108,6 @@ class AddFormFragment : Fragment(), View.OnClickListener{
                         mNewRecipeFragment,
                         NewRecipeFragment::class.java.simpleName
                     )
-                    .addToBackStack("Form")
                     .commit()
 
                 mNewRecipeFragment.arguments = mBundle
@@ -132,7 +131,6 @@ class AddFormFragment : Fragment(), View.OnClickListener{
                 mNewRecipeFragment,
                 NewRecipeFragment::class.java.simpleName
             )
-            .addToBackStack("Form")
             .commit()
 
         mNewRecipeFragment.arguments = mBundle

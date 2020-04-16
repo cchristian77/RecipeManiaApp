@@ -1,6 +1,7 @@
 package com.example.recipemaniaapp.ui.newrecipe
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -22,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_new_recipe.*
 import kotlinx.android.synthetic.main.fragment_photo_form.*
 import java.text.SimpleDateFormat
@@ -83,8 +83,6 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             val mBundle = Bundle()
             when (v.id) {
                 R.id.add_photos_btn -> {
-
-
                     val intent = Intent()
                     intent.type = "image/*"
                     intent.action = Intent.ACTION_GET_CONTENT
@@ -92,25 +90,6 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
                         Intent.createChooser(intent, "Select Picture"),
                         NewRecipeFragment.PICK_IMAGE_CODE)
                     return
-                    //                    mBundle.putString(AddFormFragment.EXTRA_TITLE, "Add Photo")
-//                    mBundle.putString(
-//                        AddFormFragment.EXTRA_FORM_DESC,
-//                        "Add a photo to your recipe. Recipe's photo makes your food look more interesting and appealing."
-//                    mBundle.putString(AddFormFragment.EXTRA_BUTTON, "Save Photo")
-//                    val mPhotoFragment = PhotoFormFragment()
-//                    fm
-//                        .beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-//                        .replace(
-//                            R.id.frame_container,
-//                            mPhotoFragment,
-//                            PhotoFormFragment::class.java.simpleName
-//                        )
-//                        .addToBackStack(null)
-//                        .addToBackStack("Form")
-//                        .commit()
-//
-//                    mPhotoFragment.arguments = mBundle
-//                    return
 
                 }
 
@@ -171,12 +150,11 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
                     mAddFormFragment,
                     AddFormFragment::class.java.simpleName
                 )
-                .addToBackStack("Form")
                 .commit()
 
             mAddFormFragment.arguments = mBundle
         } else if (v.id== R.id.add_new_recipe_btn) {
-            val valid = validator()
+            validator()
         }
     }
 
@@ -189,15 +167,15 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         val strPhoto = arguments?.getString(EXTRA_PHOTO)
 
         if(strInfo != null) {
-            tv_information.setText("Information (Saved)")
+            check_info_img.setImageResource(R.drawable.icon_check)
             add_information_btn.setText("Edit Information")
         }
         if(strIngredient != null) {
-            tv_ingredient.setText("Ingredient (Saved)")
+            check_ingredient_img.setImageResource(R.drawable.icon_check)
             add_ingredient_btn.setText("Edit Ingredient")
         }
         if(strStep != null) {
-            tv_how_to_cook.setText("How to Cook (Saved)")
+            check_how_to_cook_img.setImageResource(R.drawable.icon_check)
             add_steps_btn.setText("Edit Steps")
         }
 
@@ -209,6 +187,10 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
         if(strPhoto != null) {
             tv_preview.setText("Preview")
             add_photos_btn.setText("Change Photo")
+            check_photo_img.setImageResource(R.drawable.icon_check)
+            val param = image_preview.layoutParams as LinearLayout.LayoutParams
+            param.setMargins(0,0,0,30)
+            image_preview.layoutParams = param
             Glide.with(this).load(strPhoto).into(image_preview)
             val uri = Uri.parse(strPhoto)
             dataPhoto = uri
@@ -216,18 +198,15 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
         if(strName != null) edt_recipe_name.setText(strName)
 
-        Log.d("Photo", strPhoto.toString())
-
     }
 
-    private fun validator() : Boolean{
+    private fun validator() {
         var valid: Boolean = true
         val strName =  arguments?.getString(EXTRA_NAME)
         val strInfo = arguments?.getString(EXTRA_INFO)
         val strIngredient = arguments?.getString(EXTRA_INGREDIENT)
         val strStep = arguments?.getString(EXTRA_STEP)
         val strPhoto = arguments?.getString(EXTRA_PHOTO)
-        val category = category_spinner.selectedItemId.toInt()
 
         if(strInfo == null || strIngredient == null || strStep == null) {
             valid = false
@@ -240,13 +219,12 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
             if(category_spinner.selectedItemId.toInt() == 0) valid = false
 
-            if(!this::dataPhoto.isInitialized && valid == null) valid=false
+            if(!this::dataPhoto.isInitialized && strPhoto == null) valid=false
             }
 
         if(valid == false) Toast.makeText(activity,"Your Recipe is not complete.", Toast.LENGTH_SHORT).show()
         else uploadPhoto()
 
-        return valid
     }
 
     fun String.capitalizeWords(): String = split(" ").map { it.capitalize() }.joinToString(" ").trim()
@@ -259,13 +237,17 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
             val filePath = data!!.data
 
-            if(filePath != null) {
-                dataPhoto = filePath
-            }
+            if(filePath != null) dataPhoto = filePath
 
             if(filePath != null) {
                 tv_preview.setText("Preview")
                 add_photos_btn.setText("Change Photo")
+
+                check_photo_img.setImageResource(R.drawable.icon_check)
+                val param = image_preview.layoutParams as LinearLayout.LayoutParams
+                param.setMargins(0,0,0,30)
+                image_preview.layoutParams = param
+
                 Glide.with(this).load(dataPhoto).into(image_preview)
             }else{
                 Toast.makeText(activity, "Please Upload an Image", Toast.LENGTH_SHORT).show()
@@ -294,7 +276,6 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
                     uploadToDatabase(url)
                     Log.d("DIRECT LINK", url)
                 }
-
         }
 
     }
@@ -308,8 +289,8 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             arguments?.getString(EXTRA_STEP), category_spinner.selectedItem.toString(), user?.email.toString(),
             url, time)
         val recipeID = databaseRef.push().key.toString()
-        databaseRef.child(recipeID).setValue(recipe).
-            addOnCompleteListener {
+        databaseRef.child(recipeID).setValue(recipe)
+            .addOnCompleteListener {
                 Toast.makeText(activity, "$recipeName recipe added successfully.",Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {

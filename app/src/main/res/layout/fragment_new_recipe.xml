@@ -65,14 +65,14 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <ImageButton
-                        android:id="@+id/edit_photo_btn"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentRight="true"
-                        android:background="#FFFFFF"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/icon_edit" />
+                    <ImageView
+                        android:id="@+id/check_photo_img"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_photos"
+                        android:scaleType="fitXY" />
 
                 </RelativeLayout>
 
@@ -130,14 +130,14 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <ImageButton
-                        android:id="@+id/edit_information_btn"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentRight="true"
-                        android:background="#FFFFFF"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/icon_edit" />
+                    <ImageView
+                        android:id="@+id/check_info_img"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_information"
+                        android:scaleType="fitXY" />
 
                 </RelativeLayout>
 
@@ -182,14 +182,14 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <ImageButton
-                        android:id="@+id/edit_ingredient_btn"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentRight="true"
-                        android:background="#FFFFFF"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/icon_edit" />
+                    <ImageView
+                        android:id="@+id/check_ingredient_img"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_ingredient"
+                        android:scaleType="fitXY" />
 
                 </RelativeLayout>
 
@@ -234,14 +234,14 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <ImageButton
-                        android:id="@+id/edit_btn"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentRight="true"
-                        android:background="#FFFFFF"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/icon_edit" />
+                    <ImageView
+                        android:id="@+id/check_how_to_cook_img"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_how_to_cook"
+                        android:scaleType="fitXY" />
 
                 </RelativeLayout>
 
@@ -299,6 +299,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
             android:text="@string/add_new_recipe_btn" />
-
     </LinearLayout>
+
+
 </ScrollView>
