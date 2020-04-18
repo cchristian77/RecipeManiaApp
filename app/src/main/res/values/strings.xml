@@ -31,4 +31,26 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_recipe_name">Write your recipe\'s name.</string>
     <string name="preview">Preview</string>
+
+    <!-- PROFILE -->
+    <string name="my_profile">My Profile</string>
+    <string name="profile_name">Hizkia</string>
+    <string name="tab_text_1">My Recipe</string>
+    <string name="tab_text_2">Saved</string>
+    <string name="profile_status">Potato Master</string>
+    <string name="profile_num_likes">100</string>
+    <string name="profile_like">likes</string>
+    <string name="myRecipeTest">my Recipe Test</string>
+    <string name="savedRecipeTest">savedRecipeTest</string>
+
+    <!-- Setting -->
+    <string name="setting">Setting</string>
+    <string name="setting_account">Account</string>
+    <string name="editProfile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="signOut">Sign Out</string>
+    <string name="feedback">FeedBack</string>
+    <string name="email_recipe_mania">Email Recipe Mania</string>
+    <string name="legal">Legal</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>
