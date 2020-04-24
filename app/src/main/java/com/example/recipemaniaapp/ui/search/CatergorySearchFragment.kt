@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.example.recipemaniaapp.R
+import kotlinx.android.synthetic.main.fragment_category_search.*
 
 class CatergorySearchFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -18,7 +19,8 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        layout_not_found.visibility = View.INVISIBLE
+        rv_recipe_result.visibility = View.INVISIBLE
 
     }
 

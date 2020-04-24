@@ -72,17 +72,17 @@
 
         <Button
             android:id="@+id/sign_out"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:text="@string/signOut"
-            android:drawableStart="@drawable/SignOut"
-            android:textAllCaps="false"
-            android:textAlignment="textStart"
             android:background="@android:color/white"
-            style="?android:attr/borderlessButtonStyle"
-            android:textStyle="normal"
+            android:drawableStart="@drawable/icon_signout"
+            android:text="@string/signOut"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:textColor="@android:color/red"/>
+            android:textStyle="normal" />
     </LinearLayout>
 
     <LinearLayout
