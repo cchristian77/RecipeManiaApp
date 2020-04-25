@@ -1,16 +1,28 @@
 package com.example.recipemaniaapp.ui.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipemaniaapp.R
+import com.example.recipemaniaapp.model.Recipe
+import com.example.recipemaniaapp.ui.search.adapter.CardViewRecipeAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_category_search.*
 
 class CatergorySearchFragment : Fragment(), View.OnClickListener {
+
+    private val list = ArrayList<Recipe>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_category_search, container, false)
@@ -19,12 +31,97 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        layout_not_found.visibility = View.INVISIBLE
-        rv_recipe_result.visibility = View.INVISIBLE
+        layout_not_found.visibility = View.GONE
+        result_layout.visibility = View.GONE
+
+        back_btn_result.setOnClickListener(this)
+        back_btn_not_found.setOnClickListener(this)
+        cv_pasta.setOnClickListener(this)
+        cv_dessert.setOnClickListener(this)
+        cv_meal.setOnClickListener(this)
+        cv_pizza.setOnClickListener(this)
 
     }
 
     override fun onClick(v: View) {
+
+        when (v.id) {
+            R.id.back_btn_result -> {
+                result_layout.visibility = View.GONE
+                layout_not_found.visibility = View.GONE
+                category_layout.visibility = View.VISIBLE
+            }
+            R.id.back_btn_not_found -> {
+                layout_not_found.visibility = View.GONE
+                result_layout.visibility = View.GONE
+                category_layout.visibility = View.VISIBLE
+            }
+            R.id.cv_pasta -> {
+                searchByCategory("Pasta")
+            }
+            R.id.cv_dessert -> {
+                searchByCategory("Dessert")
+            }
+            R.id.cv_meal -> {
+                searchByCategory("Meal")
+            }
+            R.id.cv_pizza-> {
+                searchByCategory("Pizza")
+            }
+
+
+        }
+
+    }
+
+    private fun searchByCategory(category: String) {
+
+        val databaseRef = FirebaseDatabase.getInstance().reference
+        val resultRef =
+            databaseRef.child("Recipe").orderByChild("category")
+                .equalTo(category)
+
+        val eventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                list.clear()
+                for (ds in dataSnapshot.children) {
+                    var recName = ds.child("name").getValue().toString()
+                    var recLike: String =
+                        ds.child("like").getValue().toString()
+                    var recUrlPhoto: String =
+                        ds.child("photo").getValue().toString()
+                    var recipe =
+                        Recipe(recName, recLike.toInt(), recUrlPhoto)
+                    list.add(recipe)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(
+                    "Error",
+                    databaseError.getMessage()
+                ) //Don't ignore errors!
+            }
+        }
+        resultRef.addListenerForSingleValueEvent(eventListener)
+        if(list.size > 0 ) {
+            Log.d("Size" , list.size.toString())
+            rv_recipe_result.layoutManager = LinearLayoutManager(activity)
+            val listRecipeAdapter = CardViewRecipeAdapter(list)
+            rv_recipe_result.adapter = listRecipeAdapter
+            category_layout.visibility = View.GONE
+            layout_not_found.visibility = View.GONE
+
+            tv_search_result.text = category + " Category Result.";
+            result_layout.visibility = View.VISIBLE
+            tv_search_result.visibility = View.VISIBLE
+            rv_recipe_result.visibility = View.VISIBLE
+        } else {
+            category_layout.visibility = View.GONE
+            result_layout.visibility = View.GONE
+            tv_no_result.text = "There's no recipe found in " + category + " category."
+            layout_not_found.visibility = View.VISIBLE
+        }
 
     }
 }
