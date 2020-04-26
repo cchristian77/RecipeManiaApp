@@ -70,6 +70,8 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
         checker()
 
+        progressBar.visibility = View.GONE
+
     }
 
 
@@ -223,7 +225,10 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             }
 
         if(valid == false) Toast.makeText(activity,"Your Recipe is not complete.", Toast.LENGTH_SHORT).show()
-        else uploadPhoto()
+        else {
+            progressBar.visibility = View.VISIBLE
+            uploadPhoto()
+        }
 
     }
 
@@ -256,6 +261,7 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun uploadPhoto() {
+
         var url: String? = null
         storageReference = FirebaseStorage.getInstance().reference
         val ref = storageReference.child("recipe_image/" + UUID.randomUUID().toString())
@@ -281,20 +287,24 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun uploadToDatabase(url: String) {
+
         val databaseRef = FirebaseDatabase.getInstance().getReference("Recipe")
         val recipeName = edt_recipe_name.text.toString().capitalizeWords()
         val user = GoogleSignIn.getLastSignedInAccount(activity)
         val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time)
-        val recipe = Recipe(edt_recipe_name.text.toString(),  recipeName, arguments?.getString(EXTRA_INGREDIENT),
+        val recipeID = databaseRef.push().key.toString()
+        val recipe = Recipe(recipeID, edt_recipe_name.text.toString(),  recipeName, arguments?.getString(EXTRA_INGREDIENT),
             arguments?.getString(EXTRA_STEP), category_spinner.selectedItem.toString(), user?.email.toString(),
             url, time)
-        val recipeID = databaseRef.push().key.toString()
+
         databaseRef.child(recipeID).setValue(recipe)
             .addOnCompleteListener {
                 Toast.makeText(activity, "$recipeName recipe added successfully.",Toast.LENGTH_SHORT).show()
+                progressBar.visibility = View.GONE
             }
             .addOnFailureListener {
                 Toast.makeText(activity, "$recipeName saved failed.",Toast.LENGTH_SHORT).show()
+                progressBar.visibility = View.GONE
             }
     }
 

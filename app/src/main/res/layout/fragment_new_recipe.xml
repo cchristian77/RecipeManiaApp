@@ -293,12 +293,26 @@
 
         </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/add_new_recipe_btn"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
-            android:text="@string/add_new_recipe_btn" />
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/add_new_recipe_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="@string/add_new_recipe_btn" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="43dp" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

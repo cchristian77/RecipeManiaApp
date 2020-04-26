@@ -1,7 +1,7 @@
 package com.example.recipemaniaapp.model
 
 class Recipe {
-
+    var recipeID : String? = null
     var name: String? = null
     var information: String? = null
     var ingredient: String? = null
@@ -16,8 +16,9 @@ class Recipe {
 
     }
 
-    constructor(name: String?, information: String?, ingredient: String?,
+    constructor(recipeID: String?, name: String?, information: String?, ingredient: String?,
                 steps:String?, category: String?, user:String?, photo:String?, createdAt: String?) {
+        this.recipeID = recipeID
         this.name = name
         this.information = information
         this.ingredient = ingredient
@@ -28,20 +29,8 @@ class Recipe {
         this.createdAt = createdAt
     }
 
-    constructor(name: String?, information: String?, ingredient: String?,
-                steps:String?, category: String?, like: Int?, user:String?, photo:String?, createdAt: String?) {
-        this.name = name
-        this.information = information
-        this.ingredient = ingredient
-        this.steps = steps
-        this.category = category
-        this.like = like
-        this.user = user
-        this.photo = photo
-        this.createdAt = createdAt
-    }
-
-    constructor(name: String?, like: Int?, photo:String?) {
+    constructor(recipeID: String?, name: String?, like: Int?, photo:String?) {
+        this.recipeID = recipeID
         this.name = name
         this.like = like
         this.photo = photo

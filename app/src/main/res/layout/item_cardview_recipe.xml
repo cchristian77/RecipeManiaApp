@@ -80,8 +80,8 @@
                 android:id="@+id/save_btn"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@id/tv_like_count"
                 android:text="+ Save"
                 android:textSize="13sp" />
         </RelativeLayout>

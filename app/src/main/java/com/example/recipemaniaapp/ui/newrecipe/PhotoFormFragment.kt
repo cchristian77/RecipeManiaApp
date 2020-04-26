@@ -11,13 +11,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.recipemaniaapp.R
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_photo_form.*
 import java.util.*
 
@@ -120,7 +120,7 @@ class PhotoFormFragment: Fragment(), View.OnClickListener {
                         val downloadUri = task.result
                         val url = downloadUri!!.toString()
                         Log.d("DIRECT LINK", url)
-                        Picasso.get().load(data.data).into(img_preview)
+                        Glide.with(this).load(data.data).centerCrop()
                     }
                 }
             }else{
