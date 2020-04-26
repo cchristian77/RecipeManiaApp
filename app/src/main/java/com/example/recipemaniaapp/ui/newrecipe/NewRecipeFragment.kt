@@ -19,6 +19,7 @@ import com.example.recipemaniaapp.model.Recipe
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -224,9 +225,10 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
             if(!this::dataPhoto.isInitialized && strPhoto == null) valid=false
             }
 
-        if(valid == false) Toast.makeText(activity,"Your Recipe is not complete.", Toast.LENGTH_SHORT).show()
+        if(valid == false) Snackbar.make(layout_photo, "Your Recipe is not complete.", Snackbar.LENGTH_SHORT).show()
         else {
             progressBar.visibility = View.VISIBLE
+            add_new_recipe_btn.isEnabled = false
             uploadPhoto()
         }
 
@@ -255,7 +257,7 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
                 Glide.with(this).load(dataPhoto).into(image_preview)
             }else{
-                Toast.makeText(activity, "Please Upload an Image", Toast.LENGTH_SHORT).show()
+                Snackbar.make(layout_photo, "Please Upload an Image", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -299,12 +301,21 @@ class NewRecipeFragment : Fragment(), View.OnClickListener {
 
         databaseRef.child(recipeID).setValue(recipe)
             .addOnCompleteListener {
-                Toast.makeText(activity, "$recipeName recipe added successfully.",Toast.LENGTH_SHORT).show()
+                Snackbar.make(layout_photo, "$recipeName recipe added successfully.", Snackbar.LENGTH_SHORT).show()
                 progressBar.visibility = View.GONE
+                add_new_recipe_btn.isEnabled = true
+                activity!!.supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.frame_container,
+                        NewRecipeFragment(),
+                        NewRecipeFragment::class.java.simpleName
+                    )
+                    .commit()
             }
             .addOnFailureListener {
-                Toast.makeText(activity, "$recipeName saved failed.",Toast.LENGTH_SHORT).show()
+                Snackbar.make(layout_photo, "$recipeName saved failed. Please try again.", Snackbar.LENGTH_SHORT).show()
                 progressBar.visibility = View.GONE
+                add_new_recipe_btn.isEnabled = true
             }
     }
 

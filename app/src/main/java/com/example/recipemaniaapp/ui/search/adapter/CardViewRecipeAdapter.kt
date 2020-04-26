@@ -32,7 +32,6 @@ class CardViewRecipeAdapter(private val listRecipe: ArrayList<Recipe>, private v
     RecyclerView.Adapter<CardViewRecipeAdapter.CardViewViewHolder>() {
 
     private lateinit var likeHelper: LikeHelper
-    private var like : Int = 0
     lateinit var likeBtn : ImageButton
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): CardViewViewHolder {
@@ -65,7 +64,7 @@ class CardViewRecipeAdapter(private val listRecipe: ArrayList<Recipe>, private v
                 like_button.setOnClickListener {
                     var temp = tv_like_count.text.toString()
                     var arr = temp.split(" ")
-                    like = arr[0].toInt()
+                    var like = arr[0].toInt()
                     var heartPink = resources.getDrawable(R.drawable.icon_heart)
                     if (like_button.drawable.constantState == heartPink.constantState)  {
                         val values = ContentValues()
@@ -126,13 +125,13 @@ class CardViewRecipeAdapter(private val listRecipe: ArrayList<Recipe>, private v
 
     private fun loadLikeAsync(email : String, recipeID: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            val deferredNotes = async(Dispatchers.IO) {
+            val deferredLikes = async(Dispatchers.IO) {
                 val cursor = likeHelper.queryByEmailAndRecipeId(recipeID, email)
                 MappingLikeHelper.mapCursorToArrayList(cursor)
             }
-            val like = deferredNotes.await()
+            val like = deferredLikes.await()
             var size = like.size
-            if(size > 0 ) {
+            if(size > 0) {
                 Log.d("Like", like.size.toString())
                 likeBtn.setImageResource(R.drawable.icon_heartpink)
             } else {

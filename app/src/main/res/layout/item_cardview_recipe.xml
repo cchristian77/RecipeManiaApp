@@ -74,13 +74,13 @@
                 android:layout_marginLeft="4dp"
                 android:layout_toEndOf="@id/like_button"
                 android:text="Like Count"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/save_btn"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toEndOf="@id/tv_like_count"
                 android:text="+ Save"
                 android:textSize="13sp" />
