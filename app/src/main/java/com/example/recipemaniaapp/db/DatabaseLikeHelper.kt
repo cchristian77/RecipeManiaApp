@@ -10,13 +10,13 @@ internal class DatabaseLikeHelper(context: Context): SQLiteOpenHelper(context, D
     companion object {
         private const val DATABASE_NAME = "dbrecipeapp"
         private const val DATABASE_VERSION = 1
-        private val SQL_CREATE_TABLE_NOTE = "CREATE TABLE $TABLE_NAME" +
+        private val SQL_CREATE_TABLE_LIKE = "CREATE TABLE $TABLE_NAME" +
                 " (${RecipeLikeColumns.RECIPE_ID} TEXT NOT NULL, " +
                 " ${RecipeLikeColumns.USER_EMAIL} TEXT NOT NULL)"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(SQL_CREATE_TABLE_NOTE)
+        db.execSQL(SQL_CREATE_TABLE_LIKE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

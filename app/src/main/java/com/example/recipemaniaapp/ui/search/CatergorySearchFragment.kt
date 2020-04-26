@@ -85,7 +85,6 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
     }
 
     private fun searchByCategory(category: String) {
-
         val databaseRef = FirebaseDatabase.getInstance().reference
         val resultRef =
             databaseRef.child("Recipe").orderByChild("category")
@@ -97,7 +96,6 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
                 progressBar.visibility = View.VISIBLE
                 for (ds in dataSnapshot.children) {
                     var recID = ds.child("recipeID").getValue().toString()
-
                     var recName = ds.child("name").getValue().toString()
                     var recLike: String =
                         ds.child("like").getValue().toString()
@@ -106,11 +104,9 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
                     var recipe =
                         Recipe(recID, recName, recLike.toInt(), recUrlPhoto)
                     list.add(recipe)
-
                 }
 
                 if(list.size > 0 ) {
-                    Log.d("Category List Size" , list.size.toString())
                     progressBar.visibility = View.GONE
                     rv_recipe_result.layoutManager = LinearLayoutManager(activity!!)
                     val listRecipeAdapter = CardViewRecipeAdapter(list, activity!!)
@@ -168,7 +164,6 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
                         nameCut = name.toLowerCase().substring(0, querySize)
                     }
                     if (nameCut == query.toLowerCase()) {
-
                         var recID = ds.child("recipeID").getValue().toString()
 
                         var recName = ds.child("name").getValue().toString()
@@ -178,13 +173,11 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
                             ds.child("photo").getValue().toString()
                         var recipe =
                             Recipe(recID, recName, recLike.toInt(), recUrlPhoto)
-                        Log.d("Result", recUrlPhoto)
                         list.add(recipe)
                     }
                 }
 
                 if(list.size > 0 ) {
-                    Log.d("Category List Size" , list.size.toString())
                     rv_recipe_result.layoutManager = LinearLayoutManager(activity!!)
                     val listRecipeAdapter = CardViewRecipeAdapter(list, activity!!)
                     rv_recipe_result.adapter = listRecipeAdapter
@@ -202,7 +195,6 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
                     tv_no_result.text = "There's no recipe is found."
                     layout_not_found.visibility = View.VISIBLE
                 }
-
 
             }
 
