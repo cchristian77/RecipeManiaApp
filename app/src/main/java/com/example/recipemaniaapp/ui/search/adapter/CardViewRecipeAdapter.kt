@@ -2,15 +2,19 @@ package com.example.recipemaniaapp.ui.search.adapter
 
 import android.app.Activity
 import android.content.ContentValues
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.recipemaniaapp.MainActivity
 import com.example.recipemaniaapp.R
@@ -51,10 +55,14 @@ class CardViewRecipeAdapter(private val listRecipe: ArrayList<Recipe>, private v
                 val user_email = user?.email.toString()
                 loadLikeAsync(user_email, recipe.recipeID.toString())
 
-                val into = Glide.with(itemView.context)
-                    .load(recipe.photo)
-                    .apply(RequestOptions().override(350, 550))
-                    .into(recipe_image)
+                val checkUrl : Boolean = URLUtil.isValidUrl(recipe.photo);
+
+                if(checkUrl) {
+                    val into = Glide.with(itemView.context)
+                        .load(recipe.photo)
+                        .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(35)))
+                        .into(recipe_image)
+                }
 
                 tv_recipe_name.text = recipe.name + " Recipe"
                 tv_like_count.text = recipe.like.toString() + " Likes"

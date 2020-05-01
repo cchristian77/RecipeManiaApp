@@ -16,7 +16,7 @@
         android:layout_height="200dp"
         android:padding="10dp">
 
-        <com.joooonho.SelectableRoundedImageView
+        <ImageView
             android:id="@+id/recipe_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -24,11 +24,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/food"
-            card_view:sriv_left_bottom_corner_radius="5dp"
-            card_view:sriv_left_top_corner_radius="5dp"
-            card_view:sriv_right_bottom_corner_radius="5dp"
-            card_view:sriv_right_top_corner_radius="5dp" />
+            android:src="@drawable/icon_food_default" />
 
 
         <TextView
