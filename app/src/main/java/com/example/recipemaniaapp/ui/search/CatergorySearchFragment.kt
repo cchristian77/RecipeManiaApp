@@ -51,8 +51,6 @@ class CatergorySearchFragment : Fragment(), View.OnClickListener {
         searchRef = databaseRef.child("Recipe").orderByChild("name")
 
         checker()
-
-
     }
 
     override fun onClick(v: View) {

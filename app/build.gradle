@@ -87,4 +87,11 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
+
+    //for API
+    implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation 'com.google.code.gson:gson:2.8.6'
+    //for image
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

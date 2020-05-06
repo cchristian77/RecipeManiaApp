@@ -2,6 +2,7 @@ package com.example.recipemaniaapp.ui.search.adapter
 
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,6 +24,9 @@ import com.example.recipemaniaapp.db.LikeHelper
 import com.example.recipemaniaapp.helper.MappingLikeHelper
 import com.example.recipemaniaapp.model.Like
 import com.example.recipemaniaapp.model.Recipe
+import com.example.recipemaniaapp.ui.home.RecipeDetail.RecipeDetailActivity
+import com.example.recipemaniaapp.ui.home.RecipeDetail.RecipeDetailActivityFirebase
+import com.example.recipemaniaapp.ui.home.adapter.MainAdapter.CustomViewHolder.Companion.RECIPE_ID_KEY
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -121,6 +125,9 @@ class CardViewRecipeAdapter(private val listRecipe: ArrayList<Recipe>, private v
 
                 itemView.setOnClickListener {
                     Toast.makeText(itemView.context, "Show ${recipe.name}", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(itemView.context, RecipeDetailActivityFirebase::class.java)
+                    intent.putExtra(RECIPE_ID_KEY, recipe.recipeID.toString())
+                    itemView.context.startActivity(intent)
                 }
 
             }

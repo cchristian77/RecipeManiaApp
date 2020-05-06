@@ -37,7 +37,7 @@
     <string name="profile_name">Hizkia</string>
     <string name="tab_text_1">My Recipe</string>
     <string name="tab_text_2">Saved</string>
-    <string name="profile_status">Potato Master</string>
+    <string name="profile_status">User</string>
     <string name="profile_num_likes">100</string>
     <string name="profile_like">likes</string>
     <string name="myRecipeTest">my Recipe Test</string>
@@ -53,4 +53,10 @@
     <string name="email_recipe_mania">Email Recipe Mania</string>
     <string name="legal">Legal</string>
     <string name="privacy_policy">Privacy Policy</string>
+
+<!--    APP DETAIL-->
+    <string name="recipe_tab_text_1">Information</string>
+    <string name="recipe_tab_text_2">Ingredients</string>
+    <string name="recipe_tab_text_3">Steps</string>
+    <string name="profilename">ProfileName</string>
 </resources>

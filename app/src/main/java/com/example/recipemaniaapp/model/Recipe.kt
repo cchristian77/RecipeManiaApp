@@ -36,4 +36,16 @@ class Recipe {
         this.photo = photo
     }
 
+    constructor(name:String?, photo:String?, recipeId:String?){
+        this.recipeID = recipeId
+        this.name = name
+        this.photo = photo
+    }
+    constructor(name:String?, photo:String?, recipeId:String?, user: String?){
+        this.recipeID = recipeId
+        this.name = name
+        this.photo = photo
+        this.user = user
+    }
+
 }

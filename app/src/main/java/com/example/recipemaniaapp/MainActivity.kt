@@ -20,6 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
+    val TAG = "SignInActivity"
     val RC_SIGN_IN: Int = 1
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var mGoogleSignInOptions: GoogleSignInOptions
@@ -99,6 +100,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     firebaseAuthWithGoogle(account)
                 }
             } catch (e: ApiException) {
+                Log.w(TAG, "SignInResult: Failed code =" + e.statusCode)
                 Toast.makeText(this, "Google sign in failed. Please try again.", Toast.LENGTH_LONG).show()
             }
         }
