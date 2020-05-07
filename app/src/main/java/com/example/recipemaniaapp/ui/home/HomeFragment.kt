@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipemaniaapp.R
@@ -46,6 +47,7 @@ class HomeFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        rv_recipe_home.layoutManager = LinearLayoutManager(activity!!)
         recyclerView_home.layoutManager = LinearLayoutManager(activity!!)
 //        recyclerView_home.adapter = MainAdapter()
         getDataFromFirebase()
@@ -73,9 +75,9 @@ class HomeFragment : Fragment(){
                 }
 
                 if(list.size > 0 ) {
-                    rv_recipe_home.layoutManager = LinearLayoutManager(activity!!)
                     val listRecipeAdapter = CardViewRecipeAdapter(list, activity!!)
                     rv_recipe_home.adapter = listRecipeAdapter
+                    ViewCompat.setNestedScrollingEnabled(rv_recipe_home, false)
                 }
             }
 
@@ -101,7 +103,7 @@ class HomeFragment : Fragment(){
         client.newCall(request).enqueue(object: Callback{
             override fun onResponse(call: Call, response: Response) {
                 val body = response?.body?.string()
-                println(body)
+//                println(body)
 
                 val gson = GsonBuilder().create()
 
@@ -109,6 +111,7 @@ class HomeFragment : Fragment(){
 
                 activity!!.runOnUiThread {
                     recyclerView_home.adapter = MainAdapter(homeFeed)
+                    ViewCompat.setNestedScrollingEnabled(recyclerView_home, false)
                 }
 
 
@@ -125,4 +128,14 @@ class HomeFeed(val results: List<Recipes>)//nama val results harus sama dengan n
 
 class Recipes(val id:Int, val title: String, val readyInMinutes: String, val servings: Int, val sourceUrl: String, val image: String)
 
-class RecipeDetailAppBar(val id:Int, val title: String, val sourceName: String, val image: String)
+class RecipeDetailAppBar(val id:Int, val title: String, val sourceName: String, val image: String, val nutrition: Nutrition, val analyzedInstructions: List<AnalyzedInstruction>)
+
+class AnalyzedInstruction(val steps: List<Step>)
+
+class Step(val number: Int, val step: String)
+
+class Nutrition(val nutrients : List<Nutrients>, val ingredients : List<Ingredients>)
+
+class Ingredients(val name: String, val amount: Double, val unit: String)
+
+class Nutrients(val title: String, val amount: Double, val unit: String)

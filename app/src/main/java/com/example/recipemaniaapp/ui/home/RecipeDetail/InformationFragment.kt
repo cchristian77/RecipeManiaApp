@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.example.recipemaniaapp.R
 import com.example.recipemaniaapp.ui.home.HomeFeed
+import com.example.recipemaniaapp.ui.home.Nutrition
 import com.example.recipemaniaapp.ui.home.adapter.MainAdapter
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -22,18 +23,9 @@ import java.io.IOException
  * A simple [Fragment] subclass.
  */
 class InformationFragment : Fragment() {
-    var recipeId: Int? = null
+
     companion object{
         var RECIPE_ID = "RecipeId"
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        if(savedInstanceState != null){
-            val recipeIdFromBundle = savedInstanceState.getInt(RECIPE_ID)
-            recipeId = recipeIdFromBundle
-        }
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,14 +45,14 @@ class InformationFragment : Fragment() {
     }
 
     private fun getInformation(){
-
-
-        val recipeDetailUrl = "https://api.spoonacular.com/recipes/"
-        val apiKey = "apiKey=5a1eeded0e2f478a9c751e8d68ecbe43"
-        val addition = "&includeNutrition=true"
-
-//        val urlComplete = recipeDetailUrl + recipeId + "/information?" + apiKey + addition
-
+//
+//
+//        val recipeDetailUrl = "https://api.spoonacular.com/recipes/"
+//        val apiKey = "apiKey=5a1eeded0e2f478a9c751e8d68ecbe43"
+//        val addition = "&includeNutrition=true"
+//
+//        val urlComplete = recipeDetailUrl + idRecipe.toString() + "/information?" + apiKey + addition
+//
 //        val request = Request.Builder().url(urlComplete).build()
 //
 //        val client = OkHttpClient()
@@ -95,7 +87,7 @@ class InformationFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return 1
+            return 2
         }
 
         override fun onBindViewHolder(holder: InformationViewHolder, position: Int) {
@@ -110,14 +102,4 @@ class InformationFragment : Fragment() {
 
 }
 
-class Information(val nutrition: List<Nutritions>)
 
-class Nutritions (val nutrients: List<Nutrient>, val ingredients: List<Ingredients>, val caloricBreakdown: List<Nutrition>, val weightPerServing: List<WeightPerServing>)
-
-class WeightPerServing (val amoung: Int, val unit: String)
-
-class Ingredients(val name: String, val amount: Double, val unit: String)
-
-class Nutrient(val title: String, val amount: Double, val unit: String, val percentOfDailyNeeds: Double)
-
-class Nutrition (val percentProtein: Double, val percentFat: Double, val percentCarbs: Double)

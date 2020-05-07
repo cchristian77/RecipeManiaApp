@@ -29,8 +29,8 @@ class RecipeDetailActivityFirebase : AppCompatActivity(){
         setContentView(R.layout.activity_recipe_detail_tab_layout)
 
         val sectionsPagerAdapterFirebase = SectionsPagerAdapterFirebase(this, supportFragmentManager)
-        recipe_view_pager.adapter = sectionsPagerAdapterFirebase
-        recipe_tab.setupWithViewPager(recipe_view_pager)
+//        recipe_view_pager.adapter = sectionsPagerAdapterFirebase
+//        recipe_tab.setupWithViewPager(recipe_view_pager)
 
         supportActionBar?.elevation = 0f
 

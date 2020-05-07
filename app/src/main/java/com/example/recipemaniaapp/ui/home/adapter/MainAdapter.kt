@@ -56,35 +56,35 @@ class MainAdapter(val homeFeed: HomeFeed): RecyclerView.Adapter<MainAdapter.Cust
         companion object{
             val RECIPE_ID_KEY = "RECIPE_ID"
         }
-        private lateinit var likeHelper: LikeHelper
-        lateinit var likeBtn : ImageButton
-
-        fun bind(recipe: Recipe){
-            with(view){
-//                likeBtn = findViewById(R.id.like_button)
-//                likeHelper = LikeHelper.getInstance(activity.applicationContext)
-//                likeHelper.open()
+//        private lateinit var likeHelper: LikeHelper
+//        lateinit var likeBtn : ImageButton
 //
-//                val databaseRef = FirebaseDatabase.getInstance().reference
-
-            }
-
-        }
+//        fun bind(recipe: Recipe){
+//            with(view){
+////                likeBtn = findViewById(R.id.like_button)
+////                likeHelper = LikeHelper.getInstance(activity.applicationContext)
+////                likeHelper.open()
+////
+////                val databaseRef = FirebaseDatabase.getInstance().reference
+//
+//            }
+//
+//        }
         init {
             view.setOnClickListener {
                 val intent = Intent(view.context, RecipeDetailActivity::class.java)
 
                 intent.putExtra(RECIPE_ID_KEY, recipe?.id)
 
-                var data = Bundle()
-                data.putInt(InformationFragment.RECIPE_ID, recipe!!.id)
-                val infoFragment = InformationFragment()
-                val ingredientsFragment = IngredientsFragment()
-                val stepsFragment = StepsFragment()
-
-                infoFragment.arguments = data
-                ingredientsFragment.arguments = data
-                stepsFragment.arguments = data
+//                var data = Bundle()
+//                data.putInt(InformationFragment.RECIPE_ID, recipe!!.id)
+//                val infoFragment = InformationFragment()
+//                val ingredientsFragment = IngredientsFragment()
+//                val stepsFragment = StepsFragment()
+//
+//                infoFragment.arguments = data
+//                ingredientsFragment.arguments = data
+//                stepsFragment.arguments = data
 
                 view.context.startActivity(intent)
             }
